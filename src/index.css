@@ -1,0 +1,192 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 13% 9%;
+    --foreground: 220 9% 98%;
+
+    --card: 220 13% 11%;
+    --card-foreground: 220 9% 98%;
+
+    --popover: 220 13% 11%;
+    --popover-foreground: 220 9% 98%;
+
+    --primary: 262 83% 58%;
+    --primary-foreground: 220 9% 98%;
+
+    --secondary: 220 13% 14%;
+    --secondary-foreground: 220 9% 98%;
+
+    --muted: 220 13% 14%;
+    --muted-foreground: 220 9% 64%;
+
+    --accent: 220 13% 14%;
+    --accent-foreground: 220 9% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 220 9% 98%;
+
+    --border: 220 13% 18%;
+    --input: 220 13% 18%;
+    --ring: 262 83% 58%;
+
+    --radius: 0.5rem;
+  }
+
+  .cyberpunk {
+    --background: 5 7% 8%;
+    --foreground: 330 100% 98%;
+
+    --card: 5 7% 10%;
+    --card-foreground: 330 100% 98%;
+
+    --popover: 5 7% 10%;
+    --popover-foreground: 330 100% 98%;
+
+    --primary: 315 100% 70%;
+    --primary-foreground: 5 7% 8%;
+
+    --secondary: 5 7% 12%;
+    --secondary-foreground: 330 100% 98%;
+
+    --muted: 5 7% 12%;
+    --muted-foreground: 330 30% 70%;
+
+    --accent: 5 7% 12%;
+    --accent-foreground: 330 100% 98%;
+
+    --destructive: 0 100% 67%;
+    --destructive-foreground: 330 100% 98%;
+
+    --border: 5 7% 15%;
+    --input: 5 7% 15%;
+    --ring: 315 100% 70%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-['Inter'] antialiased;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+  }
+
+  .cyberpunk body {
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(255, 0, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(255, 255, 0, 0.1) 0%, transparent 50%);
+  }
+
+  /* Glass effect utility classes */
+  .glass {
+    @apply bg-glass backdrop-blur-md border border-white/10;
+  }
+
+  .glass-strong {
+    @apply bg-glass-strong backdrop-blur-xl border border-white/20;
+  }
+
+  /* Neon glow effects */
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+
+  .glow-green {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  }
+
+  /* Cyberpunk theme specific glows */
+  .cyberpunk .glow-purple {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+  }
+
+  .cyberpunk .glow-blue {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+  }
+
+  .cyberpunk .glow-green {
+    box-shadow: 0 0 20px rgba(255, 255, 0, 0.4);
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.5);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.7);
+  }
+
+  .cyberpunk ::-webkit-scrollbar-thumb {
+    background: rgba(255, 0, 255, 0.5);
+  }
+
+  .cyberpunk ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 0, 255, 0.7);
+  }
+
+  /* Monaco Editor theme integration */
+  .monaco-editor {
+    background: transparent !important;
+  }
+
+  .monaco-editor .margin {
+    background: transparent !important;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-neon-purple to-neon-blue text-white font-medium px-6 py-2 rounded-lg 
+           transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply glass text-foreground font-medium px-6 py-2 rounded-lg 
+           transition-all duration-300 hover:glass-strong hover:scale-105 active:scale-95;
+  }
+
+  .card-glass {
+    @apply glass rounded-xl p-6 transition-all duration-300 hover:glass-strong hover:scale-[1.02];
+  }
+
+  .difficulty-badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
+  }
+
+  .difficulty-easy {
+    @apply difficulty-badge bg-difficulty-easy/20 text-difficulty-easy border border-difficulty-easy/30;
+  }
+
+  .difficulty-medium {
+    @apply difficulty-badge bg-difficulty-medium/20 text-difficulty-medium border border-difficulty-medium/30;
+  }
+
+  .difficulty-hard {
+    @apply difficulty-badge bg-difficulty-hard/20 text-difficulty-hard border border-difficulty-hard/30;
+  }
+}
