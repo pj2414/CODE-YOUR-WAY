@@ -1,27 +1,35 @@
-const API_BASE_URL = 'http://localhost:3000';
+import config from '@/config/config';
 
-class ApiClient {
-  private getAuthHeaders() {
-    const token = localStorage.getItem('token');
-    return {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-    };
+class Api {
+  private baseUrl: string;
+
+  constructor() {
+    this.baseUrl = config.apiUrl;
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
-    const response = await fetch(url, {
+    const token = localStorage.getItem('token');
+    const defaultHeaders: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      defaultHeaders['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
       ...options,
       headers: {
-        ...this.getAuthHeaders(),
+        ...defaultHeaders,
         ...options.headers,
       },
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Network error' }));
-      throw new Error(errorData.error || `HTTP ${response.status}`);
+      const error = await response.json().catch(() => ({
+        error: 'An error occurred while processing your request'
+      }));
+      throw error;
     }
 
     return response.json();
@@ -277,4 +285,4 @@ class ApiClient {
   }
 }
 
-export const api = new ApiClient();
+export const api = new Api();
