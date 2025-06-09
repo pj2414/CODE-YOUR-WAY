@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    historyApiFallback: true, // This ensures SPA routing works in dev
   },
   plugins: [
     react(),
@@ -19,4 +20,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    outDir: "dist", // Ensure build output goes to dist folder
+    sourcemap: false, // Optional: disable sourcemaps for production
+  },
+  base: "/", // Ensure assets are served from root
 }));
