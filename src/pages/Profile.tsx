@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,8 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { User, Mail, Calendar, Trophy, Code, Target, Star } from 'lucide-react';
+import { User, Mail, Calendar } from 'lucide-react';
+import Dashboard from './Dashboard'; // Import the Dashboard component
 
 const Profile = () => {
   const { user } = useAuth();
@@ -24,20 +23,6 @@ const Profile = () => {
     setIsEditing(false);
     // API call to save profile data would go here
   };
-
-  const achievements = [
-    { name: 'First Submission', icon: Code, color: 'neon-blue' },
-    { name: 'Problem Solver', icon: Target, color: 'neon-green' },
-    { name: 'Code Warrior', icon: Trophy, color: 'neon-purple' },
-    { name: 'Rising Star', icon: Star, color: 'neon-pink' }
-  ];
-
-  const stats = [
-    { label: 'Problems Solved', value: '42', color: 'text-neon-green' },
-    { label: 'Success Rate', value: '78%', color: 'text-neon-blue' },
-    { label: 'Current Streak', value: '7 days', color: 'text-neon-purple' },
-    { label: 'Total Submissions', value: '156', color: 'text-neon-pink' }
-  ];
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -138,77 +123,9 @@ const Profile = () => {
           </Card>
         </div>
 
-        {/* Stats and Achievements */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Statistics */}
-          <Card className="glass border border-white/10">
-            <CardHeader>
-              <CardTitle>Statistics</CardTitle>
-              <CardDescription>Your coding journey at a glance</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {stats.map((stat, index) => (
-                  <div key={index} className="text-center p-4 glass rounded-lg">
-                    <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
-                    <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Achievements */}
-          <Card className="glass border border-white/10">
-            <CardHeader>
-              <CardTitle>Achievements</CardTitle>
-              <CardDescription>Badges you've earned along the way</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {achievements.map((achievement, index) => (
-                  <div 
-                    key={index} 
-                    className="flex flex-col items-center p-4 glass rounded-lg hover:glass-strong transition-all group"
-                  >
-                    <div className={`p-3 rounded-full bg-gradient-to-r from-${achievement.color} to-${achievement.color}/70 group-hover:scale-110 transition-transform mb-2`}>
-                      <achievement.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <span className="text-sm font-medium text-center">{achievement.name}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Recent Activity */}
-          <Card className="glass border border-white/10">
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Your latest coding activities</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[
-                  { action: 'Solved', problem: 'Two Sum', difficulty: 'Easy', time: '2 hours ago' },
-                  { action: 'Attempted', problem: 'Binary Tree Traversal', difficulty: 'Medium', time: '5 hours ago' },
-                  { action: 'Solved', problem: 'Valid Parentheses', difficulty: 'Easy', time: '1 day ago' },
-                ].map((activity, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 glass rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-2 h-2 rounded-full ${activity.action === 'Solved' ? 'bg-neon-green' : 'bg-neon-blue'}`}></div>
-                      <span className="font-medium">{activity.action}</span>
-                      <span className="text-foreground">{activity.problem}</span>
-                      <Badge variant="outline" className="text-xs">
-                        {activity.difficulty}
-                      </Badge>
-                    </div>
-                    <span className="text-sm text-muted-foreground">{activity.time}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Dashboard */}
+        <div className="lg:col-span-2">
+          <Dashboard />
         </div>
       </div>
     </div>

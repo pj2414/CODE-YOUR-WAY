@@ -27,12 +27,14 @@ const Dashboard = () => {
   const { data: dashboardData, isLoading, error } = useQuery({
     queryKey: ['dashboard'],
     queryFn: () => api.getDashboardStats(),
-    // Add these options to help with debugging and retrying
-    retry: 2,
-    refetchOnWindowFocus: false,
-    onError: (error) => {
-      console.error('Dashboard fetch error:', error);
-      toast.error('Failed to load dashboard stats');
+    retry: 3,
+    retryDelay: 1000,
+    onError: (error: any) => {
+      console.error('Dashboard fetch error:', {
+        message: error.message,
+        response: error.response?.data
+      });
+      toast.error(error.response?.data?.error || 'Failed to load dashboard stats');
     }
   });
 
@@ -55,7 +57,10 @@ const Dashboard = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-neon-purple"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-neon-purple mb-4"></div>
+          <p className="text-muted-foreground">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
@@ -63,9 +68,17 @@ const Dashboard = () => {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center max-w-md mx-auto p-6">
           <h2 className="text-2xl font-bold mb-2">Failed to load dashboard</h2>
-          <p className="text-muted-foreground">Please try refreshing the page</p>
+          <p className="text-muted-foreground mb-4">
+            {(error as any)?.response?.data?.error || 'Please try refreshing the page'}
+          </p>
+          <Button 
+            onClick={() => window.location.reload()}
+            className="bg-neon-purple hover:bg-neon-purple/80"
+          >
+            Retry Loading
+          </Button>
         </div>
       </div>
     );

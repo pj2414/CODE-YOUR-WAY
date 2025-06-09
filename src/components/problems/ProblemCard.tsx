@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Clock, Star, Bookmark, CheckCircle } from 'lucide-react';
@@ -47,8 +46,8 @@ const ProblemCard: React.FC<ProblemCardProps> = ({
     return (
       <Card className="glass hover:glass-strong transition-all duration-300 hover:scale-[1.01] group">
         <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+            <div className="flex-1 mb-2 sm:mb-0">
               <div className="flex items-center space-x-3">
                 <Link to={`/problems/${problem._id}`} className="group-hover:text-neon-purple transition-colors">
                   <h3 className="font-semibold text-lg">{problem.title}</h3>
@@ -67,7 +66,7 @@ const ProblemCard: React.FC<ProblemCardProps> = ({
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex items-start sm:items-center space-x-4">
               {problem.rating && (
                 <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                   <Star className="h-3 w-3" />

@@ -90,6 +90,27 @@ export interface ThreadWithPosts {
   posts: DiscussionPost[];
 }
 
+export interface ContestSubmission {
+  problemId: string;
+  code: string;
+  language: string;
+  submittedAt: string;
+  result: {
+    passed: boolean;
+    testResults: TestResult[];
+  };
+}
+
+export interface Contest {
+  _id: string;
+  title: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+  problems: Problem[];
+  userSubmissions?: ContestSubmission[];
+}
+
 async getSubmissions() {
   return this.get('/submissions', {
     headers: {

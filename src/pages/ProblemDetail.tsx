@@ -162,25 +162,25 @@ const ProblemDetail: React.FC = () => {
     <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-background' : 'min-h-screen'} flex flex-col`}>
       {/* Header */}
       {!isFullscreen && (
-        <div className="border-b border-white/10 p-4">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+        <div className="border-b border-white/10 p-2 sm:p-4">
+          <div className="container max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 variant="ghost"
                 onClick={() => navigate('/problems')}
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-1 sm:space-x-2 text-sm"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span>Back to Problems</span>
               </Button>
-              <Separator orientation="vertical" className="h-6" />
+              <Separator orientation="vertical" className="h-6 hidden sm:block" />
               <div>
-                <h1 className="text-xl font-bold">{problem.title}</h1>
-                <div className="flex items-center space-x-2 mt-1">
-                  <Badge variant={getDifficultyVariant(problem.difficulty)}>
+                <h1 className="text-lg sm:text-xl font-bold">{problem.title}</h1>
+                <div className="flex items-center space-x-1 mt-1">
+                  <Badge variant={getDifficultyVariant(problem.difficulty)} className="text-xs">
                     {problem.difficulty}
                   </Badge>
-                  <Badge variant="outline">{problem.topicTag}</Badge>
+                  <Badge variant="outline" className="text-xs">{problem.topicTag}</Badge>
                   {problem.topics.map((topic, index) => (
                     <Badge key={index} variant="outline" className="text-xs">
                       {topic}
@@ -194,23 +194,23 @@ const ProblemDetail: React.FC = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex flex-col lg:flex-row">
         {/* Problem Description Panel */}
         {!isFullscreen && (
-          <div className="w-1/2 border-r border-white/10 overflow-hidden">
+          <div className="w-full lg:w-1/2 border-b lg:border-r lg:border-b-0 border-white/10 overflow-hidden">
             <Tabs defaultValue="description" className="h-full flex flex-col">
               <TabsList className="grid w-full grid-cols-2 glass border-b border-white/10">
-                <TabsTrigger value="description">Description</TabsTrigger>
+                <TabsTrigger value="description" className="text-sm">Description</TabsTrigger>
                 <TabsTrigger value="discussions">Discuss</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="description" className="flex-1 overflow-auto p-6">
-                <div className="space-y-6">
+              <TabsContent value="description" className="flex-1 overflow-auto p-3 sm:p-4">
+                <div className="space-y-3 sm:space-y-4">
                   {problem.problemStatement && (
-                    <div className="space-y-2">
-                      <h3 className="text-lg font-semibold mb-3">Problem Statement</h3>
+                    <div className="space-y-1">
+                      <h3 className="text-lg font-semibold mb-2">Problem Statement</h3>
                       <div className="prose prose-invert max-w-none">
-                        <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                        <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
                           {problem.problemStatement}
                         </p>
                       </div>
@@ -219,36 +219,33 @@ const ProblemDetail: React.FC = () => {
 
                   {problem.examples && problem.examples.length > 0 && (
                     <div>
-                      <h3 className="text-lg font-semibold mb-3">Examples</h3>
-                      <div className="space-y-4">
+                      <h3 className="text-lg font-semibold mb-2">Examples</h3>
+                      <div className="space-y-3">
                         {problem.examples.map((example, index) => (
                           <Card key={index} className="glass border border-white/10">
-                            <CardHeader className="pb-3">
-                              <CardTitle className="text-sm">Example {index + 1}</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-3">
+                            <CardContent className="space-y-2">
                               <div>
-                                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
                                   Input:
                                 </span>
-                                <div className="mt-1 bg-muted/20 rounded p-2 font-mono text-sm">
+                                <div className="mt-0 bg-muted/20 rounded p-2 font-mono text-sm overflow-x-auto">
                                   {example.input}
                                 </div>
                               </div>
                               <div>
-                                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
                                   Output:
                                 </span>
-                                <div className="mt-1 bg-muted/20 rounded p-2 font-mono text-sm">
+                                <div className="mt-0 bg-muted/20 rounded p-2 font-mono text-sm overflow-x-auto">
                                   {example.output}
                                 </div>
                               </div>
                               {example.explanation && (
                                 <div>
-                                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
                                     Explanation:
                                   </span>
-                                  <div className="mt-1 text-sm text-muted-foreground">
+                                  <div className="mt-0 text-sm text-muted-foreground">
                                     {example.explanation}
                                   </div>
                                 </div>
@@ -262,8 +259,8 @@ const ProblemDetail: React.FC = () => {
 
                   {problem.constraints && problem.constraints.length > 0 && (
                     <div>
-                      <h3 className="text-lg font-semibold mb-3">Constraints</h3>
-                      <div className="glass rounded-lg p-4">
+                      <h3 className="text-lg font-semibold mb-2">Constraints</h3>
+                      <div className="glass rounded-lg p-3">
                         <ul className="text-sm text-muted-foreground space-y-1">
                           {problem.constraints.map((constraint, index) => (
                             <li key={index} className="flex items-start">
@@ -278,11 +275,11 @@ const ProblemDetail: React.FC = () => {
 
                   {problem.hint && (
                     <div>
-                      <h3 className="text-lg font-semibold mb-3 flex items-center">
+                      <h3 className="text-lg font-semibold mb-2 flex items-center">
                         <Lightbulb className="h-4 w-4 mr-2" />
                         Hint
                       </h3>
-                      <div className="glass rounded-lg p-4">
+                      <div className="glass rounded-lg p-3">
                         <p className="text-sm text-muted-foreground">{problem.hint}</p>
                       </div>
                     </div>
@@ -290,7 +287,7 @@ const ProblemDetail: React.FC = () => {
                 </div>
               </TabsContent>
 
-              <TabsContent value="discussions" className="flex-1 overflow-auto p-6">
+              <TabsContent value="discussions" className="flex-1 overflow-auto p-3 sm:p-4">
                 <DiscussionPanel problemId={id!} />
               </TabsContent>
             </Tabs>
@@ -317,25 +314,25 @@ const ProblemDetail: React.FC = () => {
           {/* Results Panel */}
           {lastSubmissionResult && (
             <div className="border-t border-white/10 max-h-64 overflow-auto">
-              <div className="p-4">
-                <div className="flex items-center space-x-2 mb-4">
+              <div className="p-3 sm:p-4">
+                <div className="flex items-center space-x-2 mb-3">
                   {lastSubmissionResult.passed ? (
                     <CheckCircle className="h-5 w-5 text-neon-green" />
                   ) : (
                     <XCircle className="h-5 w-5 text-destructive" />
                   )}
-                  <h3 className="font-semibold">
+                  <h3 className="font-semibold text-sm">
                     {lastSubmissionResult.passed ? 'All Tests Passed!' : 'Some Tests Failed'}
                   </h3>
                 </div>
 
                 {lastSubmissionResult.error && (
-                  <div className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                  <div className="mb-3 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
                     <div className="flex items-center space-x-2 mb-2">
                       <AlertCircle className="h-4 w-4 text-destructive" />
                       <span className="text-sm font-medium">Error</span>
                     </div>
-                    <code className="text-sm">{lastSubmissionResult.error}</code>
+                    <code className="text-xs">{lastSubmissionResult.error}</code>
                   </div>
                 )}
 
@@ -357,22 +354,22 @@ const ProblemDetail: React.FC = () => {
                           <XCircle className="h-4 w-4 text-destructive" />
                         )}
                       </div>
-                      <div className="grid grid-cols-3 gap-2 text-xs">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
                         <div>
                           <span className="font-medium">Input:</span>
-                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded">
+                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
                             {result.input}
                           </div>
                         </div>
                         <div>
                           <span className="font-medium">Expected:</span>
-                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded">
+                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
                             {result.expected}
                           </div>
                         </div>
                         <div>
                           <span className="font-medium">Your Output:</span>
-                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded">
+                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
                             {result.output || 'No output'}
                           </div>
                         </div>

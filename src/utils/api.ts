@@ -53,12 +53,17 @@ class ApiClient {
   }
 
   // Problems
-  async getProblems(page = 1, limit = 12) {
-    return this.request(`/problems?page=${page}&limit=${limit}`);
+  async getProblems(page: number = 1, limit: number = 12): Promise<{
+    problems: Problem[];
+    currentPage: number;
+    totalPages: number;
+    totalProblems: number;
+  }> {
+    return this.get(`/api/problems?page=${page}&limit=${limit}`);
   }
 
   async getProblem(id: string) {
-    return this.request(`/problems/${id}`);
+    return this.get(`/api/problems/${id}`);  // Changed to use /api prefix and correct path
   }
 
   async getProblemsByDifficulty(difficulty: string) {
@@ -71,7 +76,44 @@ class ApiClient {
 
   // Submissions
   async submitCode(problemId: string, code: string, language: string) {
-    return this.post('/submit', { problemId, code, language });
+    // Add test case validation
+    const response = await this.request('/submit', {
+      method: 'POST',
+      body: JSON.stringify({ 
+        problemId, 
+        code, 
+        language,
+        runType: 'submit' // Add runType to differentiate between run and submit
+      }),
+    });
+
+    // Transform response to match SubmissionResult type
+    return {
+      ...response,
+      result: {
+        passed: response.result.passed,
+        testResults: response.result.testResults.map((result: any) => ({
+          input: result.input,
+          expected: result.expected,
+          output: result.output,
+          pass: result.pass
+        })),
+        error: response.result.error
+      }
+    };
+  }
+
+  async runCode(problemId: string, code: string, language: string) {
+    // Run against example test cases only
+    return this.request('/submit', {
+      method: 'POST', 
+      body: JSON.stringify({ 
+        problemId, 
+        code, 
+        language,
+        runType: 'run' // Will only run example test cases
+      }),
+    });
   }
 
   async getSubmissions() {
@@ -80,6 +122,60 @@ class ApiClient {
 
   async getSubmission(id: string) {
     return this.request(`/submissions/${id}`);
+  }
+
+  // Contests - Public API
+  async getContests() {
+    return this.request('/api/contests/all');
+  }
+
+  async joinContest(roomId: string) {
+    return this.request('/api/contests/join', {
+      method: 'POST',
+      body: JSON.stringify({ roomId }),
+    });
+  }
+
+  // Remove old submitContestSolution method and use this instead:
+  async submitContestCode(contestId: string, problemId: string, code: string, language: string) {
+    return this.request(`/api/contests/${contestId}/submit`, {
+      method: 'POST',
+      body: JSON.stringify({ problemId, code, language }),
+    });
+  }
+
+  async runContestCode(contestId: string, problemId: string, code: string, language: string) {
+    return this.request(`/api/contests/${contestId}/run`, {
+      method: 'POST',
+      body: JSON.stringify({ problemId, code, language }),
+    });
+  }
+
+  async getContestRankings(contestId: string) {
+    // Always use .get so auth headers are sent
+    return this.get(`/api/contests/${contestId}/rankings`);
+  }
+
+  async getContest(contestId: string) {
+    // Always use .get so auth headers are sent
+    return this.get(`/api/contests/${contestId}`);
+  }
+
+  async getContestSubmissions(contestId: string, userId?: string | null) {
+    const url = `/api/contests/${contestId}/submissions${userId ? `?userId=${userId}` : ''}`;
+    return this.get(url);
+  }
+
+  // Admin - Contest Management
+  async getAdminContests() {
+    return this.request('/api/admin/contests');
+  }
+
+  async createContest(contestData: any) {
+    return this.request('/api/admin/contests/create', {
+      method: 'POST',
+      body: JSON.stringify(contestData),
+    });
   }
 
   // Chatbot
@@ -165,13 +261,19 @@ class ApiClient {
     });
   }
 
+  // Admin - Problems Management
+  async getAdminProblems() {
+    return this.request('/api/admin/problems');
+  }
+
+  // Admin - Users Management
+  async getAdminUsers() {
+    return this.request('/api/admin/users');
+  }
+
+  // Dashboard
   async getDashboardStats() {
-    const token = localStorage.getItem('token');
-    return this.request('/api/dashboard', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
+    return this.request('/api/dashboard');
   }
 }
 

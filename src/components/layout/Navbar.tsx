@@ -6,7 +6,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Code, User, Settings, LogOut, Menu, X, Palette } from 'lucide-react';
+import { Code, User, Settings, LogOut, Menu, X, Palette, Trophy } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
@@ -27,6 +27,13 @@ const Navbar = () => {
         onClick={() => mobile && setMobileMenuOpen(false)}
       >
         Problems
+      </Link>
+      <Link
+        to="/contests"
+        className={`transition-colors hover:text-neon-pink ${mobile ? 'block py-2' : ''}`}
+        onClick={() => mobile && setMobileMenuOpen(false)}
+      >
+        Contests
       </Link>
       {isAuthenticated && (
         <>

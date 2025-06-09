@@ -3,6 +3,7 @@ import Editor from '@monaco-editor/react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Play, RotateCcw, Settings, Maximize2, Minimize2 } from 'lucide-react';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface CodeEditorProps {
   language: string;
@@ -39,20 +40,36 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   onFullscreenToggle,
 }) => {
   const editorRef = useRef<any>(null);
+  const isMobile = useIsMobile();
 
   const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor;
     
-    // Configure editor
     editor.updateOptions({
-      fontSize: 14,
-      lineHeight: 20,
+      fontSize: isMobile ? 12 : 14,
+      lineHeight: isMobile ? 18 : 20,
       fontFamily: 'Fira Code, Monaco, Menlo, monospace',
-      minimap: { enabled: window.innerWidth > 1024 },
+      minimap: { enabled: !isMobile && window.innerWidth > 1024 },
+      wordWrap: 'on',
       scrollBeyondLastLine: false,
       automaticLayout: true,
       theme: 'vs-dark',
+      // Mobile-friendly settings
+      mouseWheelZoom: !isMobile,
+      formatOnType: !isMobile,
+      lightbulb: { enabled: !isMobile },
+      quickSuggestions: !isMobile,
     });
+
+    // Add touch scrolling support
+    if (isMobile) {
+      editor.onDidChangeModelContent(() => {
+        editor.revealPositionInCenter({
+          lineNumber: editor.getPosition().lineNumber,
+          column: 1
+        });
+      });
+    }
   };
 
   const resetCode = () => {
@@ -75,10 +92,10 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}
-      <div className="flex items-center justify-between p-3 border-b border-white/10 bg-background/50">
-        <div className="flex items-center space-x-3">
+      <div className="flex flex-col md:flex-row md:items-center justify-between p-2 md:p-3 space-y-2 md:space-y-0 border-b border-white/10 bg-background/50">
+        <div className="flex items-center space-x-2 md:space-x-3">
           <Select value={language} onValueChange={handleLanguageChange}>
-            <SelectTrigger className="w-32 glass border-white/20">
+            <SelectTrigger className="w-28 md:w-32 glass border-white/20 text-xs md:text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="glass-strong border border-white/20">
@@ -126,7 +143,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       </div>
 
       {/* Editor */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative min-h-[300px]">
         <Editor
           height="100%"
           language={language === 'cpp' ? 'cpp' : language}
@@ -156,17 +173,17 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-between p-3 border-t border-white/10 bg-background/50">
-        <div className="text-xs text-muted-foreground">
+      <div className="flex flex-col-reverse md:flex-row items-center justify-between p-2 md:p-3 space-y-2 md:space-y-0 border-t border-white/10 bg-background/50">
+        <div className="text-[10px] md:text-xs text-muted-foreground hidden md:block">
           Press Ctrl+S to save • Ctrl+/ to comment
         </div>
         
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 w-full md:w-auto">
           <Button
             variant="outline"
             onClick={onRun}
             disabled={isRunning || isSubmitting || !value.trim()}
-            className="btn-secondary"
+            className="btn-secondary flex-1 md:flex-none text-xs md:text-sm"
           >
             <Play className="h-4 w-4 mr-2" />
             {isRunning ? 'Running...' : 'Run'}
@@ -175,7 +192,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <Button
             onClick={onSubmit}
             disabled={isRunning || isSubmitting}
-            className="btn-primary"
+            className="btn-primary flex-1 md:flex-none text-xs md:text-sm"
           >
             {isSubmitting ? 'Submitting...' : 'Submit'}
           </Button>

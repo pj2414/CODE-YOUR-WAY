@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -20,6 +19,17 @@ import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+
+// Contest Pages
+import ContestsListPage from "./pages/ContestsListPage";
+import ContestArenaPage from "./pages/ContestArenaPage";
+import ContestRankingsPage from "./pages/ContestRankingsPage";
+import AdminContestsDashboard from "./pages/AdminContestsDashboard";
+import AdminCreateContestPage from "./pages/AdminCreateContestPage";
+
+// Admin Pages
+import AdminProblemsPage from "./pages/AdminProblemsPage";
+import AdminUsersPage from "./pages/AdminUsersPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -79,6 +89,27 @@ const App = () => (
                   </ProtectedRoute>
                 </Layout>
               } />
+              
+              {/* Contest Routes */}
+              <Route path="/contests" element={
+                <Layout>
+                  <ContestsListPage />
+                </Layout>
+              } />
+              <Route path="/contests/:contestId" element={
+                <Layout>
+                  <ProtectedRoute>
+                    <ContestArenaPage />
+                  </ProtectedRoute>
+                </Layout>
+              } />
+              <Route path="/contests/:contestId/rankings" element={
+                <Layout>
+                  <ContestRankingsPage />
+                </Layout>
+              } />
+              
+              {/* Admin Routes */}
               <Route path="/admin" element={
                 <Layout>
                   <ProtectedRoute adminOnly>
@@ -86,6 +117,35 @@ const App = () => (
                   </ProtectedRoute>
                 </Layout>
               } />
+              <Route path="/admin/contests" element={
+                <Layout>
+                  <ProtectedRoute adminOnly>
+                    <AdminContestsDashboard />
+                  </ProtectedRoute>
+                </Layout>
+              } />
+              <Route path="/admin/contests/create" element={
+                <Layout>
+                  <ProtectedRoute adminOnly>
+                    <AdminCreateContestPage />
+                  </ProtectedRoute>
+                </Layout>
+              } />
+              <Route path="/admin/problems" element={
+                <Layout>
+                  <ProtectedRoute adminOnly>
+                    <AdminProblemsPage />
+                  </ProtectedRoute>
+                </Layout>
+              } />
+              <Route path="/admin/users" element={
+                <Layout>
+                  <ProtectedRoute adminOnly>
+                    <AdminUsersPage />
+                  </ProtectedRoute>
+                </Layout>
+              } />
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
