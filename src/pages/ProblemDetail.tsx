@@ -206,33 +206,34 @@ const ProblemDetail: React.FC = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:flex-row relative">
-        {/* Mobile Problem Description Overlay */}
-        {showProblemPanel && (
-          <div className="lg:hidden fixed inset-0 z-40 bg-background/95 backdrop-blur-sm">
-            <div className="h-full flex flex-col">
-              <div className="p-4 border-b border-white/10 flex items-center justify-between">
-                <h2 className="text-lg font-semibold">Problem Details</h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowProblemPanel(false)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="flex-1 overflow-hidden">
-                <Tabs defaultValue="description" className="h-full flex flex-col">
+      <div className="flex-1 flex flex-col">
+        {/* Mobile Layout */}
+        <div className="lg:hidden flex flex-col h-full">
+          {/* Mobile Problem Description Panel */}
+          {showProblemPanel ? (
+            <div className="flex-1 overflow-hidden">
+              <div className="h-full flex flex-col">
+                <div className="p-3 border-b border-white/10 flex items-center justify-between">
+                  <h2 className="text-lg font-semibold">Problem Details</h2>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowProblemPanel(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                <Tabs defaultValue="description" className="flex-1 flex flex-col">
                   <TabsList className="grid w-full grid-cols-2 glass border-b border-white/10">
                     <TabsTrigger value="description" className="text-sm">Description</TabsTrigger>
                     <TabsTrigger value="discussions">Discuss</TabsTrigger>
                   </TabsList>
                   
-                  <TabsContent value="description" className="flex-1 overflow-auto p-4">
-                    <div className="space-y-4">
+                  <TabsContent value="description" className="flex-1 overflow-auto p-3">
+                    <div className="space-y-3">
                       {problem.problemStatement && (
                         <div className="space-y-2">
-                          <h3 className="text-lg font-semibold mb-2">Problem Statement</h3>
+                          <h3 className="text-base font-semibold mb-2">Problem Statement</h3>
                           <div className="prose prose-invert max-w-none">
                             <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
                               {problem.problemStatement}
@@ -243,7 +244,7 @@ const ProblemDetail: React.FC = () => {
 
                       {problem.examples && problem.examples.length > 0 && (
                         <div>
-                          <h3 className="text-lg font-semibold mb-2">Examples</h3>
+                          <h3 className="text-base font-semibold mb-2">Examples</h3>
                           <div className="space-y-3">
                             {problem.examples.map((example, index) => (
                               <Card key={index} className="glass border border-white/10">
@@ -252,7 +253,7 @@ const ProblemDetail: React.FC = () => {
                                     <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
                                       Input:
                                     </span>
-                                    <div className="mt-0 bg-muted/20 rounded p-2 font-mono text-sm overflow-x-auto">
+                                    <div className="mt-0 bg-muted/20 rounded p-2 font-mono text-xs overflow-x-auto">
                                       {example.input}
                                     </div>
                                   </div>
@@ -260,7 +261,7 @@ const ProblemDetail: React.FC = () => {
                                     <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
                                       Output:
                                     </span>
-                                    <div className="mt-0 bg-muted/20 rounded p-2 font-mono text-sm overflow-x-auto">
+                                    <div className="mt-0 bg-muted/20 rounded p-2 font-mono text-xs overflow-x-auto">
                                       {example.output}
                                     </div>
                                   </div>
@@ -269,7 +270,7 @@ const ProblemDetail: React.FC = () => {
                                       <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
                                         Explanation:
                                       </span>
-                                      <div className="mt-0 text-sm text-muted-foreground">
+                                      <div className="mt-0 text-xs text-muted-foreground">
                                         {example.explanation}
                                       </div>
                                     </div>
@@ -283,9 +284,9 @@ const ProblemDetail: React.FC = () => {
 
                       {problem.constraints && problem.constraints.length > 0 && (
                         <div>
-                          <h3 className="text-lg font-semibold mb-2">Constraints</h3>
+                          <h3 className="text-base font-semibold mb-2">Constraints</h3>
                           <div className="glass rounded-lg p-3">
-                            <ul className="text-sm text-muted-foreground space-y-1">
+                            <ul className="text-xs text-muted-foreground space-y-1">
                               {problem.constraints.map((constraint, index) => (
                                 <li key={index} className="flex items-start">
                                   <span className="mr-2">•</span>
@@ -299,212 +300,280 @@ const ProblemDetail: React.FC = () => {
 
                       {problem.hint && (
                         <div>
-                          <h3 className="text-lg font-semibold mb-2 flex items-center">
+                          <h3 className="text-base font-semibold mb-2 flex items-center">
                             <Lightbulb className="h-4 w-4 mr-2" />
                             Hint
                           </h3>
                           <div className="glass rounded-lg p-3">
-                            <p className="text-sm text-muted-foreground">{problem.hint}</p>
+                            <p className="text-xs text-muted-foreground">{problem.hint}</p>
                           </div>
                         </div>
                       )}
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="discussions" className="flex-1 overflow-auto p-4">
+                  <TabsContent value="discussions" className="flex-1 overflow-auto p-3">
                     <DiscussionPanel problemId={id!} />
                   </TabsContent>
                 </Tabs>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Desktop Problem Description Panel */}
-        {!isFullscreen && (
-          <div className="hidden lg:block w-1/2 border-r border-white/10 overflow-hidden">
-            <Tabs defaultValue="description" className="h-full flex flex-col">
-              <TabsList className="grid w-full grid-cols-2 glass border-b border-white/10">
-                <TabsTrigger value="description" className="text-sm">Description</TabsTrigger>
-                <TabsTrigger value="discussions">Discuss</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="description" className="flex-1 overflow-auto p-4">
-                <div className="space-y-4">
-                  {problem.problemStatement && (
-                    <div className="space-y-2">
-                      <h3 className="text-lg font-semibold mb-2">Problem Statement</h3>
-                      <div className="prose prose-invert max-w-none">
-                        <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                          {problem.problemStatement}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {problem.examples && problem.examples.length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold mb-2">Examples</h3>
-                      <div className="space-y-3">
-                        {problem.examples.map((example, index) => (
-                          <Card key={index} className="glass border border-white/10">
-                            <CardContent className="space-y-2">
-                              <div>
-                                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
-                                  Input:
-                                </span>
-                                <div className="mt-0 bg-muted/20 rounded p-2 font-mono text-sm overflow-x-auto">
-                                  {example.input}
-                                </div>
-                              </div>
-                              <div>
-                                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
-                                  Output:
-                                </span>
-                                <div className="mt-0 bg-muted/20 rounded p-2 font-mono text-sm overflow-x-auto">
-                                  {example.output}
-                                </div>
-                              </div>
-                              {example.explanation && (
-                                <div>
-                                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
-                                    Explanation:
-                                  </span>
-                                  <div className="mt-0 text-sm text-muted-foreground">
-                                    {example.explanation}
-                                  </div>
-                                </div>
-                              )}
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {problem.constraints && problem.constraints.length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold mb-2">Constraints</h3>
-                      <div className="glass rounded-lg p-3">
-                        <ul className="text-sm text-muted-foreground space-y-1">
-                          {problem.constraints.map((constraint, index) => (
-                            <li key={index} className="flex items-start">
-                              <span className="mr-2">•</span>
-                              <span>{constraint}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  )}
-
-                  {problem.hint && (
-                    <div>
-                      <h3 className="text-lg font-semibold mb-2 flex items-center">
-                        <Lightbulb className="h-4 w-4 mr-2" />
-                        Hint
-                      </h3>
-                      <div className="glass rounded-lg p-3">
-                        <p className="text-sm text-muted-foreground">{problem.hint}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="discussions" className="flex-1 overflow-auto p-4">
-                <DiscussionPanel problemId={id!} />
-              </TabsContent>
-            </Tabs>
-          </div>
-        )}
-
-        {/* Code Editor Panel */}
-        <div className={`${isFullscreen ? 'w-full' : 'w-full lg:w-1/2'} flex flex-col min-h-0`}>
-          <div className="flex-1 min-h-0">
-            <CodeEditor
-              language={language}
-              value={code}
-              onChange={setCode}
-              onLanguageChange={handleLanguageChange}
-              onRun={handleRun}
-              onSubmit={handleSubmit}
-              isRunning={false}
-              isSubmitting={submitMutation.isPending}
-              isFullscreen={isFullscreen}
-              onFullscreenToggle={() => setIsFullscreen(!isFullscreen)}
-            />
-          </div>
-
-          {/* Results Panel */}
-          {lastSubmissionResult && (
-            <div className="border-t border-white/10 max-h-64 overflow-auto shrink-0">
-              <div className="p-3 sm:p-4">
-                <div className="flex items-center space-x-2 mb-3">
-                  {lastSubmissionResult.passed ? (
-                    <CheckCircle className="h-5 w-5 text-neon-green" />
-                  ) : (
-                    <XCircle className="h-5 w-5 text-destructive" />
-                  )}
-                  <h3 className="font-semibold text-sm">
-                    {lastSubmissionResult.passed ? 'All Tests Passed!' : 'Some Tests Failed'}
-                  </h3>
-                </div>
-
-                {lastSubmissionResult.error && (
-                  <div className="mb-3 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <AlertCircle className="h-4 w-4 text-destructive" />
-                      <span className="text-sm font-medium">Error</span>
-                    </div>
-                    <code className="text-xs break-all">{lastSubmissionResult.error}</code>
-                  </div>
-                )}
-
-                <div className="space-y-2">
-                  {lastSubmissionResult.testResults.map((result, index) => (
-                    <div
-                      key={index}
-                      className={`p-3 rounded-lg border ${
-                        result.pass
-                          ? 'bg-neon-green/10 border-neon-green/20'
-                          : 'bg-destructive/10 border-destructive/20'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium">Test Case {index + 1}</span>
-                        {result.pass ? (
-                          <CheckCircle className="h-4 w-4 text-neon-green" />
-                        ) : (
-                          <XCircle className="h-4 w-4 text-destructive" />
-                        )}
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                        <div>
-                          <span className="font-medium">Input:</span>
-                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
-                            {result.input}
-                          </div>
-                        </div>
-                        <div>
-                          <span className="font-medium">Expected:</span>
-                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
-                            {result.expected}
-                          </div>
-                        </div>
-                        <div>
-                          <span className="font-medium">Your Output:</span>
-                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
-                            {result.output || 'No output'}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+          ) : (
+            /* Mobile Code Editor */
+            <div className="flex-1 flex flex-col">
+              <div className="flex-1" style={{ minHeight: '60vh' }}>
+                <CodeEditor
+                  language={language}
+                  value={code}
+                  onChange={setCode}
+                  onLanguageChange={handleLanguageChange}
+                  onRun={handleRun}
+                  onSubmit={handleSubmit}
+                  isRunning={false}
+                  isSubmitting={submitMutation.isPending}
+                  isFullscreen={isFullscreen}
+                  onFullscreenToggle={() => setIsFullscreen(!isFullscreen)}
+                />
               </div>
             </div>
           )}
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden lg:flex lg:flex-row flex-1">
+          {/* Desktop Problem Description Panel */}
+          {!isFullscreen && (
+            <div className="w-1/2 border-r border-white/10 overflow-hidden">
+              <Tabs defaultValue="description" className="h-full flex flex-col">
+                <TabsList className="grid w-full grid-cols-2 glass border-b border-white/10">
+                  <TabsTrigger value="description" className="text-sm">Description</TabsTrigger>
+                  <TabsTrigger value="discussions">Discuss</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="description" className="flex-1 overflow-auto p-4">
+                  <div className="space-y-4">
+                    {problem.problemStatement && (
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-semibold mb-2">Problem Statement</h3>
+                        <div className="prose prose-invert max-w-none">
+                          <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                            {problem.problemStatement}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {problem.examples && problem.examples.length > 0 && (
+                      <div>
+                        <h3 className="text-lg font-semibold mb-2">Examples</h3>
+                        <div className="space-y-3">
+                          {problem.examples.map((example, index) => (
+                            <Card key={index} className="glass border border-white/10">
+                              <CardContent className="space-y-2">
+                                <div>
+                                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
+                                    Input:
+                                  </span>
+                                  <div className="mt-0 bg-muted/20 rounded p-2 font-mono text-sm overflow-x-auto">
+                                    {example.input}
+                                  </div>
+                                </div>
+                                <div>
+                                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
+                                    Output:
+                                  </span>
+                                  <div className="mt-0 bg-muted/20 rounded p-2 font-mono text-sm overflow-x-auto">
+                                    {example.output}
+                                  </div>
+                                </div>
+                                {example.explanation && (
+                                  <div>
+                                    <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
+                                      Explanation:
+                                    </span>
+                                    <div className="mt-0 text-sm text-muted-foreground">
+                                      {example.explanation}
+                                    </div>
+                                  </div>
+                                )}
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {problem.constraints && problem.constraints.length > 0 && (
+                      <div>
+                        <h3 className="text-lg font-semibold mb-2">Constraints</h3>
+                        <div className="glass rounded-lg p-3">
+                          <ul className="text-sm text-muted-foreground space-y-1">
+                            {problem.constraints.map((constraint, index) => (
+                              <li key={index} className="flex items-start">
+                                <span className="mr-2">•</span>
+                                <span>{constraint}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+
+                    {problem.hint && (
+                      <div>
+                        <h3 className="text-lg font-semibold mb-2 flex items-center">
+                          <Lightbulb className="h-4 w-4 mr-2" />
+                          Hint
+                        </h3>
+                        <div className="glass rounded-lg p-3">
+                          <p className="text-sm text-muted-foreground">{problem.hint}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="discussions" className="flex-1 overflow-auto p-4">
+                  <DiscussionPanel problemId={id!} />
+                </TabsContent>
+              </Tabs>
+            </div>
+          )}
+
+          {/* Desktop Code Editor Panel */}
+          <div className={`${isFullscreen ? 'w-full' : 'w-1/2'} flex flex-col`}>
+            <div className="flex-1">
+              <CodeEditor
+                language={language}
+                value={code}
+                onChange={setCode}
+                onLanguageChange={handleLanguageChange}
+                onRun={handleRun}
+                onSubmit={handleSubmit}
+                isRunning={false}
+                isSubmitting={submitMutation.isPending}
+                isFullscreen={isFullscreen}
+                onFullscreenToggle={() => setIsFullscreen(!isFullscreen)}
+              />
+            </div>
+
+            {/* Desktop Results Panel */}
+            {lastSubmissionResult && (
+              <div className="border-t border-white/10 max-h-64 overflow-auto">
+                <div className="p-3 sm:p-4">
+                  <div className="flex items-center space-x-2 mb-3">
+                    {lastSubmissionResult.passed ? (
+                      <CheckCircle className="h-5 w-5 text-neon-green" />
+                    ) : (
+                      <XCircle className="h-5 w-5 text-destructive" />
+                    )}
+                    <h3 className="font-semibold text-sm">
+                      {lastSubmissionResult.passed ? 'All Tests Passed!' : 'Some Tests Failed'}
+                    </h3>
+                  </div>
+
+                  {lastSubmissionResult.error && (
+                    <div className="mb-3 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <AlertCircle className="h-4 w-4 text-destructive" />
+                        <span className="text-sm font-medium">Error</span>
+                      </div>
+                      <code className="text-xs break-all">{lastSubmissionResult.error}</code>
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    {lastSubmissionResult.testResults.map((result, index) => (
+                      <div
+                        key={index}
+                        className={`p-3 rounded-lg border ${
+                          result.pass
+                            ? 'bg-neon-green/10 border-neon-green/20'
+                            : 'bg-destructive/10 border-destructive/20'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">Test Case {index + 1}</span>
+                          {result.pass ? (
+                            <CheckCircle className="h-4 w-4 text-neon-green" />
+                          ) : (
+                            <XCircle className="h-4 w-4 text-destructive" />
+                          )}
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+                          <div>
+                            <span className="font-medium">Input:</span>
+                            <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
+                              {result.input}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="font-medium">Expected:</span>
+                            <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
+                              {result.expected}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="font-medium">Your Output:</span>
+                            <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
+                              {result.output || 'No output'}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Results Panel */}
+        {!showProblemPanel && lastSubmissionResult && (
+          <div className="lg:hidden border-t border-white/10 max-h-48 overflow-auto">
+            <div className="p-3">
+              <div className="flex items-center space-x-2 mb-3">
+                {lastSubmissionResult.passed ? (
+                  <CheckCircle className="h-4 w-4 text-neon-green" />
+                ) : (
+                  <XCircle className="h-4 w-4 text-destructive" />
+                )}
+                <h3 className="font-semibold text-sm">
+                  {lastSubmissionResult.passed ? 'All Tests Passed!' : 'Some Tests Failed'}
+                </h3>
+              </div>
+
+              {lastSubmissionResult.error && (
+                <div className="mb-3 p-2 bg-destructive/10 border border-destructive/20 rounded-lg">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <AlertCircle className="h-3 w-3 text-destructive" />
+                    <span className="text-xs font-medium">Error</span>
+                  </div>
+                  <code className="text-xs break-all">{lastSubmissionResult.error}</code>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                {lastSubmissionResult.testResults.map((result, index) => (
+                  <div
+                    key={index}
+                    className={`p-2 rounded-lg border ${
+                      result.pass
+                        ? 'bg-neon-green/10 border-neon-green/20'
+                        : 'bg-destructive/10 border-destructive/20'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium">Test Case {index + 1}</span>
+                      {result.pass ? (
+                        <CheckCircle className="h-3 w-3 text-neon-green" />
+                      ) : (
+                        <XCircle className="h-3 w-3 text-destructive" />
+                      )}
+                    </div>
+                    <div className="space-y-1 text-xs">
+                
         </div>
       </div>
 
