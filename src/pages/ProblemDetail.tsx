@@ -30,7 +30,7 @@ const ProblemDetail: React.FC = () => {
     enabled: !!id,
   });
 
-  console.log('Fetched problem data:', problem); // Add this line
+  console.log('Fetched problem data:', problem);
 
   useEffect(() => {
     if (problem) {
@@ -80,7 +80,6 @@ const ProblemDetail: React.FC = () => {
       return;
     }
 
-    // Make an API call to evaluate the code
     api.submitCode(id!, code, language)
       .then(response => {
         setLastSubmissionResult(response.result);
@@ -162,30 +161,36 @@ const ProblemDetail: React.FC = () => {
     <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-background' : 'min-h-screen'} flex flex-col`}>
       {/* Header */}
       {!isFullscreen && (
-        <div className="border-b border-white/10 p-2 sm:p-4">
+        <div className="border-b border-white/10 p-2 sm:p-4 flex-shrink-0">
           <div className="container max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
               <Button
                 variant="ghost"
                 onClick={() => navigate('/problems')}
-                className="flex items-center space-x-1 sm:space-x-2 text-sm"
+                className="flex items-center space-x-1 sm:space-x-2 text-sm flex-shrink-0"
               >
                 <ArrowLeft className="h-4 w-4" />
-                <span>Back to Problems</span>
+                <span className="hidden sm:inline">Back to Problems</span>
+                <span className="sm:hidden">Back</span>
               </Button>
               <Separator orientation="vertical" className="h-6 hidden sm:block" />
-              <div>
-                <h1 className="text-lg sm:text-xl font-bold">{problem.title}</h1>
-                <div className="flex items-center space-x-1 mt-1">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg sm:text-xl font-bold truncate">{problem.title}</h1>
+                <div className="flex items-center space-x-1 mt-1 flex-wrap gap-1">
                   <Badge variant={getDifficultyVariant(problem.difficulty)} className="text-xs">
                     {problem.difficulty}
                   </Badge>
                   <Badge variant="outline" className="text-xs">{problem.topicTag}</Badge>
-                  {problem.topics.map((topic, index) => (
+                  {problem.topics.slice(0, 2).map((topic, index) => (
                     <Badge key={index} variant="outline" className="text-xs">
                       {topic}
                     </Badge>
                   ))}
+                  {problem.topics.length > 2 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{problem.topics.length - 2}
+                    </Badge>
+                  )}
                 </div>
               </div>
             </div>
@@ -194,12 +199,12 @@ const ProblemDetail: React.FC = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:flex-row">
+      <div className="flex-1 flex flex-col xl:flex-row min-h-0">
         {/* Problem Description Panel */}
         {!isFullscreen && (
-          <div className="w-full lg:w-1/2 border-b lg:border-r lg:border-b-0 border-white/10 overflow-hidden">
+          <div className="w-full xl:w-1/2 border-b xl:border-r xl:border-b-0 border-white/10 flex flex-col min-h-0">
             <Tabs defaultValue="description" className="h-full flex flex-col">
-              <TabsList className="grid w-full grid-cols-2 glass border-b border-white/10">
+              <TabsList className="grid w-full grid-cols-2 glass border-b border-white/10 flex-shrink-0">
                 <TabsTrigger value="description" className="text-sm">Description</TabsTrigger>
                 <TabsTrigger value="discussions">Discuss</TabsTrigger>
               </TabsList>
@@ -223,7 +228,7 @@ const ProblemDetail: React.FC = () => {
                       <div className="space-y-3">
                         {problem.examples.map((example, index) => (
                           <Card key={index} className="glass border border-white/10">
-                            <CardContent className="space-y-2">
+                            <CardContent className="space-y-2 p-3">
                               <div>
                                 <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
                                   Input:
@@ -265,7 +270,7 @@ const ProblemDetail: React.FC = () => {
                           {problem.constraints.map((constraint, index) => (
                             <li key={index} className="flex items-start">
                               <span className="mr-2">•</span>
-                              <span>{constraint}</span>
+                              <span className="break-words">{constraint}</span>
                             </li>
                           ))}
                         </ul>
@@ -295,8 +300,8 @@ const ProblemDetail: React.FC = () => {
         )}
 
         {/* Code Editor Panel */}
-        <div className={`${isFullscreen ? 'w-full' : 'w-full lg:w-1/2'} flex flex-col`}>
-          <div className="flex-1">
+        <div className={`${isFullscreen ? 'w-full h-full' : 'w-full xl:w-1/2 h-[60vh] xl:h-auto'} flex flex-col min-h-0`}>
+          <div className="flex-1 min-h-0">
             <CodeEditor
               language={language}
               value={code}
@@ -313,7 +318,7 @@ const ProblemDetail: React.FC = () => {
 
           {/* Results Panel */}
           {lastSubmissionResult && (
-            <div className="border-t border-white/10 max-h-64 overflow-auto">
+            <div className="border-t border-white/10 max-h-64 overflow-auto flex-shrink-0">
               <div className="p-3 sm:p-4">
                 <div className="flex items-center space-x-2 mb-3">
                   {lastSubmissionResult.passed ? (
@@ -332,7 +337,7 @@ const ProblemDetail: React.FC = () => {
                       <AlertCircle className="h-4 w-4 text-destructive" />
                       <span className="text-sm font-medium">Error</span>
                     </div>
-                    <code className="text-xs">{lastSubmissionResult.error}</code>
+                    <code className="text-xs break-all">{lastSubmissionResult.error}</code>
                   </div>
                 )}
 
@@ -354,22 +359,22 @@ const ProblemDetail: React.FC = () => {
                           <XCircle className="h-4 w-4 text-destructive" />
                         )}
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                         <div>
                           <span className="font-medium">Input:</span>
-                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
+                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto break-all">
                             {result.input}
                           </div>
                         </div>
                         <div>
                           <span className="font-medium">Expected:</span>
-                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
+                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto break-all">
                             {result.expected}
                           </div>
                         </div>
                         <div>
                           <span className="font-medium">Your Output:</span>
-                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto">
+                          <div className="font-mono mt-1 p-1 bg-muted/20 rounded overflow-x-auto break-all">
                             {result.output || 'No output'}
                           </div>
                         </div>
