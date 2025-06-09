@@ -1,41 +1,30 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:3000';
 
-class Api {
-  private baseUrl: string;
-
-  constructor() {
-    this.baseUrl = API_URL;
+class ApiClient {
+  private getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+      'Content-Type': 'application/json',
+      ...(token && { Authorization: `Bearer ${token}` }),
+    };
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    try {
-      const token = localStorage.getItem('token');
-      const defaultHeaders: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
+    const url = `${API_BASE_URL}${endpoint}`;
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...this.getAuthHeaders(),
+        ...options.headers,
+      },
+    });
 
-      if (token) {
-        defaultHeaders['Authorization'] = `Bearer ${token}`;
-      }
-
-      const response = await fetch(`${this.baseUrl}${endpoint}`, {
-        ...options,
-        headers: {
-          ...defaultHeaders,
-          ...options.headers,
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Request failed');
-      }
-
-      return response.json();
-    } catch (error: any) {
-      console.error('API Error:', error);
-      throw new Error(error.message || 'Network error');
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Network error' }));
+      throw new Error(errorData.error || `HTTP ${response.status}`);
     }
+
+    return response.json();
   }
 
   // Generic HTTP methods
@@ -288,4 +277,4 @@ class Api {
   }
 }
 
-export const api = new Api();
+export const api = new ApiClient();
