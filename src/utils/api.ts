@@ -1,38 +1,41 @@
-import config from '@/config/config';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 class Api {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = config.apiUrl;
+    this.baseUrl = API_URL;
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const token = localStorage.getItem('token');
-    const defaultHeaders: HeadersInit = {
-      'Content-Type': 'application/json',
-    };
+    try {
+      const token = localStorage.getItem('token');
+      const defaultHeaders: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
 
-    if (token) {
-      defaultHeaders['Authorization'] = `Bearer ${token}`;
+      if (token) {
+        defaultHeaders['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        ...options,
+        headers: {
+          ...defaultHeaders,
+          ...options.headers,
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Request failed');
+      }
+
+      return response.json();
+    } catch (error: any) {
+      console.error('API Error:', error);
+      throw new Error(error.message || 'Network error');
     }
-
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      ...options,
-      headers: {
-        ...defaultHeaders,
-        ...options.headers,
-      },
-    });
-
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({
-        error: 'An error occurred while processing your request'
-      }));
-      throw error;
-    }
-
-    return response.json();
   }
 
   // Generic HTTP methods
