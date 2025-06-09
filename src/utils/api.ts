@@ -117,7 +117,7 @@ class ApiClient {
   }
 
   async getSubmissions() {
-    return this.request('/submissions');
+    return this.request('/api/submissions');
   }
 
   async getSubmission(id: string) {
